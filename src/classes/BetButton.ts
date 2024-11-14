@@ -1,15 +1,14 @@
 import { GameObjects, Scene } from "phaser";
 import { Button, ButtonProps, IButton } from "./Button";
-import { SlotConfig } from "./SpaceSlot";
+import { SlotConfig } from "../config";
 
-export type BetButtonProps = Omit<ButtonProps, "interactive"> & {
+export type BetButtonProps = Omit<ButtonProps, "interactive" | "width"> & {
   maxBet: number;
   initialBet: number;
   betIncrement: number;
 };
 
 export class BetButton extends GameObjects.Container implements IButton {
-  width: number;
   height: number;
   color: number;
   radius: number;
@@ -19,8 +18,8 @@ export class BetButton extends GameObjects.Container implements IButton {
   txtObject: GameObjects.Text;
   plus: Button;
   minus: Button;
+  clickCallback: () => void;
   constructor(props: BetButtonProps) {
-    //  32px radius on the corners
     const graphics = props.scene.add.graphics({
       fillStyle: { color: props.color },
     });
@@ -28,16 +27,16 @@ export class BetButton extends GameObjects.Container implements IButton {
     const rect2 = graphics.fillRoundedRect(
       50,
       0,
-      120,
+      130,
       props.height,
       props.radius
     );
 
     super(props.scene, props.x, props.y, [rect2]);
 
-    const txt = props.scene.add.text(55, 5, this.getLabel(), {
-      fontFamily: "Arial",
-      fontSize: 20,
+    const txt = props.scene.add.text(55, 15, this.getLabel(), {
+      fontFamily: props.font,
+      fontSize: props.fontSize,
       color: Phaser.Display.Color.ValueToColor(props.textColor).rgba,
     });
 
@@ -51,12 +50,14 @@ export class BetButton extends GameObjects.Container implements IButton {
       radius: props.radius,
       text: "-",
       textColor: props.textColor,
+      font: props.font,
+      fontSize: props.fontSize,
       interactive: true,
       handleClick: () => this.handleMinusClick(),
     });
     this.plus = new Button({
       scene: props.scene,
-      x: 180,
+      x: 190,
       y: 0,
       color: props.color,
       height: props.height,
@@ -64,19 +65,21 @@ export class BetButton extends GameObjects.Container implements IButton {
       radius: props.radius,
       text: "+",
       textColor: props.textColor,
+      font: props.font,
+      fontSize: props.fontSize,
       interactive: true,
       handleClick: () => this.handlePlusClick(),
     });
     this.minus.disable();
     this.add([this.minus, this.plus, txt]);
 
-    this.width = props.width;
     this.height = props.height;
     this.radius = props.radius;
     this.color = props.color;
     this.text = props.text;
     this.scene.add.existing(this);
     this.txtObject = txt;
+    this.clickCallback = props.handleClick;
 
     rect2.setAlpha(0.8);
     //this does not work
@@ -88,7 +91,7 @@ export class BetButton extends GameObjects.Container implements IButton {
     // );
   }
 
-  getLabel() {
+  getLabel(): string {
     const config: SlotConfig = this.scene.data.get("config") as SlotConfig;
     const bet = this.scene.data.get("bet");
     return `${config.game.betTxt} ${bet}${config.game.currency}`;
@@ -109,6 +112,8 @@ export class BetButton extends GameObjects.Container implements IButton {
       this.plus.disable();
       return;
     }
+
+    this.clickCallback();
   }
 
   handleMinusClick(): void {
@@ -124,8 +129,14 @@ export class BetButton extends GameObjects.Container implements IButton {
       this.minus.disable();
       return;
     }
+    this.clickCallback();
   }
 
-  enable(): void {}
-  disable(): void {}
+  enable(): void {
+    this.minus.enable();
+    this.plus.enable();
+  }
+  disable(): void {
+    //nothing to do here
+  }
 }

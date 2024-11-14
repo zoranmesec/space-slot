@@ -1,46 +1,36 @@
 import { GameObjects, Scene } from "phaser";
 import { ReelItem } from "./ReelItem";
-import { SlotConfig } from "./SpaceSlot";
+import { SlotConfig } from "../config";
 export class Reel extends GameObjects.Container {
   reelItems: ReelItem[];
-  constructor(scene: Scene, x: number, y: number, nrItems: number = 3) {
-    super(scene, x, y, []);
-    const config: SlotConfig = this.scene.data.get("config") as SlotConfig;
+  constructor(scene: Scene, x: number, y: number) {
+    const config: SlotConfig = scene.data.get("config") as SlotConfig;
     const items1 = new ReelItem(
       scene,
-      0,
-      0,
       Phaser.Utils.Array.GetRandom(config.reel.items)
     );
     const items2 = new ReelItem(
       scene,
-      0,
-      config.reel.itemSize,
       Phaser.Utils.Array.GetRandom(config.reel.items)
     );
     const items3 = new ReelItem(
       scene,
-      0,
-      config.reel.itemSize * 2,
       Phaser.Utils.Array.GetRandom(config.reel.items)
     );
+    super(scene, x, y, [items1, items2, items3]);
+
     Phaser.Actions.GridAlign([items1, items2, items3], {
-      cellWidth: 115,
+      cellWidth: config.reel.itemSize,
       position: Phaser.Display.Align.TOP_LEFT,
       width: 1,
       height: -1,
       cellHeight: config.reel.itemSize,
     });
-    this.add([items1, items2, items3]);
     scene.add.existing(this);
     this.reelItems = [items1, items2, items3];
   }
 
-  preload() {}
-
-  create() {}
-
-  spin(speed: number) {
+  spin(speed: number): void {
     this.reelItems.forEach((item) => {
       item.blur();
       item.y += speed;
@@ -49,21 +39,22 @@ export class Reel extends GameObjects.Container {
       }
     });
   }
-  stopSpin() {
+  stopSpin(): void {
     this.reelItems.forEach((item) => {
       item.unBlur();
     });
     this.reelItems = Phaser.Utils.Array.Shuffle(this.reelItems);
+    const config: SlotConfig = this.scene.data.get("config") as SlotConfig;
     Phaser.Actions.GridAlign(this.reelItems, {
-      cellWidth: 115,
+      cellWidth: config.reel.itemSize,
       position: Phaser.Display.Align.TOP_LEFT,
       width: 1,
       height: -1,
-      cellHeight: 115,
+      cellHeight: config.reel.itemSize,
     });
   }
 
-  getResult() {
+  getResult(): number[] {
     return this.reelItems.map((x) => x.code);
   }
 }

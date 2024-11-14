@@ -1,5 +1,5 @@
-import { GameObjects, Scene } from "phaser";
-import { Button, ButtonProps, IButton } from "./Button";
+import { GameObjects } from "phaser";
+import { ButtonProps, IButton } from "./Button";
 
 export type SpinButtonProps = Pick<
   ButtonProps,
@@ -20,9 +20,7 @@ export class SpinButton extends GameObjects.Sprite implements IButton {
     super(props.scene, 0, 0, "spin");
     this.clickCallback = props.handleClick;
     this.spinButton = spinButton;
-    this.reset();
-  }
-  enable() {
+    this.enable();
     this.spinButton.on("pointerup", () => {
       this.spinButton.setTint(0x666666, 0x666666, 0x666666, 0x666666);
       this.spinButton.postFX.disable(true);
@@ -30,8 +28,7 @@ export class SpinButton extends GameObjects.Sprite implements IButton {
       this.clickCallback();
     });
   }
-
-  reset() {
+  enable() {
     this.spinButton.setInteractive({
       cursor: "pointer",
     });
@@ -39,5 +36,9 @@ export class SpinButton extends GameObjects.Sprite implements IButton {
     this.spinButton.postFX.addShine(0.5, 0.3, 5);
   }
 
-  disable(): void {}
+  disable(): void {
+    this.spinButton.setTint(0x666666, 0x666666, 0x666666, 0x666666);
+    this.spinButton.postFX.disable(true);
+    this.spinButton.disableInteractive(true);
+  }
 }

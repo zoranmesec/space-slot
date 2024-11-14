@@ -10,6 +10,8 @@ export type ButtonProps = {
   radius: number;
   text: string;
   textColor: number;
+  font: string;
+  fontSize: number;
   interactive: boolean;
   handleClick?: () => void;
 };
@@ -29,12 +31,11 @@ export class Button extends GameObjects.Container implements IButton {
   clickCallback: () => void;
   txtObj: GameObjects.Text;
   constructor(props: ButtonProps) {
-    const txt = props.scene.add.text(10, 0, props.text, {
-      fontFamily: "Arial",
-      fontSize: 40,
+    const txt = props.scene.add.text(10, 15, props.text, {
+      fontFamily: props.font,
+      fontSize: props.fontSize,
       color: Phaser.Display.Color.ValueToColor(props.textColor).rgba,
     });
-    //  32px radius on the corners
     const graphics = props.scene.add.graphics({
       fillStyle: { color: props.color },
     });
@@ -46,7 +47,6 @@ export class Button extends GameObjects.Container implements IButton {
       props.height,
       props.radius
     );
-    rect.setAlpha(0.8);
 
     super(props.scene, props.x, props.y, [rect, txt]);
     this.scene = props.scene;
@@ -59,28 +59,39 @@ export class Button extends GameObjects.Container implements IButton {
     this.txtObj = txt;
     this.clickCallback = props.handleClick;
     this.scene.add.existing(this);
+    this.rect = rect;
     if (props.interactive) {
       this.enable();
     }
 
+    this.setListeners();
+  }
+  setListeners() {
     this.on("pointerdown", () => {
       this.setScale(0.9);
-    });
-    this.on("pointerup", () => {
-      this.setScale(1);
       if (this.clickCallback !== undefined) {
         this.clickCallback();
       }
     });
+    this.on("pointerup", () => {
+      this.setScale(1);
+    });
   }
   enable(): void {
     this.setInteractive({
-      hitArea: new Phaser.Geom.Rectangle(10, 10, this.width, this.height),
+      hitArea: new Phaser.Geom.Rectangle(
+        20,
+        20,
+        this.width + 10,
+        this.height + 10
+      ),
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
       useHandCursor: true,
     });
+    this.rect.setAlpha(0.8);
   }
   disable(): void {
+    this.rect.setAlpha(0.3);
     this.disableInteractive(true);
   }
 
