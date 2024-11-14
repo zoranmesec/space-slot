@@ -42,4 +42,9 @@ export class ReelItem extends GameObjects.Sprite {
       });
     }
   }
+
+  changeCode(newCode: number) {
+    this.setFrame("items_" + newCode + ".png");
+    this.code = newCode;
+  }
 }

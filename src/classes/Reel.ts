@@ -40,11 +40,11 @@ export class Reel extends GameObjects.Container {
     });
   }
   stopSpin(): void {
+    const config: SlotConfig = this.scene.data.get("config") as SlotConfig;
     this.reelItems.forEach((item) => {
+      item.changeCode(Phaser.Utils.Array.GetRandom(config.reel.items));
       item.unBlur();
     });
-    this.reelItems = Phaser.Utils.Array.Shuffle(this.reelItems);
-    const config: SlotConfig = this.scene.data.get("config") as SlotConfig;
     Phaser.Actions.GridAlign(this.reelItems, {
       cellWidth: config.reel.itemSize,
       position: Phaser.Display.Align.TOP_LEFT,
