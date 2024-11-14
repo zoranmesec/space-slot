@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { ReelItem } from "./ReelItem";
-import { SlotConfig } from "../config";
+import { SlotConfig } from "../../config";
 export class Reel extends GameObjects.Container {
   reelItems: ReelItem[];
   constructor(scene: Scene, x: number, y: number) {

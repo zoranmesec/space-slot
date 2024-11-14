@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from "phaser";
-import { SlotConfig } from "../config";
+import { SlotConfig } from "../../config";
 
 export class ReelItem extends GameObjects.Sprite {
   isBlurred: boolean = false;

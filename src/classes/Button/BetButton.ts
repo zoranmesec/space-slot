@@ -1,6 +1,6 @@
 import { GameObjects } from "phaser";
 import { Button, ButtonProps, IButton } from "./Button";
-import { SlotConfig } from "../config";
+import { SlotConfig } from "../../config";
 
 export type BetButtonProps = Omit<ButtonProps, "interactive" | "width"> & {
   maxBet: number;

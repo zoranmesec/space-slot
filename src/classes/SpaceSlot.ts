@@ -1,11 +1,11 @@
 import { Scene } from "phaser";
-import { Reel } from "./Reel";
+import { Reel } from "./Reel/Reel";
 import Config, { SlotConfig } from "../config";
 
-import { SpinButton } from "./SpinButton";
-import { BetButton } from "./BetButton";
-import { Button } from "./Button";
-import { AutospinButton } from "./AutospinButton";
+import { SpinButton } from "./Button/SpinButton";
+import { BetButton } from "./Button/BetButton";
+import { Button } from "./Button/Button";
+import { AutospinButton } from "./Button/AutospinButton";
 
 export default class SpaceSlot {
   reel1: Reel;
