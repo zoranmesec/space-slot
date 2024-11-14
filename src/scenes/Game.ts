@@ -10,7 +10,7 @@ export default class GameScene extends Phaser.Scene {
   create(): void {
     const img = this.add.image(0, 0, "background");
     img.setOrigin(0, 0);
-    var cfg: SlotConfig = config;
+    const cfg: SlotConfig = config;
 
     this.data.set("config", cfg);
     try {
@@ -18,6 +18,7 @@ export default class GameScene extends Phaser.Scene {
       this.slot.run();
     } catch (error) {
       //TODO: display error message
+      console.log(error);
     }
   }
 

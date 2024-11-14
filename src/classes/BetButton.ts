@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects } from "phaser";
 import { Button, ButtonProps, IButton } from "./Button";
 import { SlotConfig } from "../config";
 
